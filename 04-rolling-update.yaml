@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx
+  labels:
+    app: nginx
+  namespace: demok8s
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nginx
+
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1 # จำนวน pod ที่จะสร้างขึ้นมาเพิ่มเมื่อมีการ update
+      maxUnavailable: 1 # จำนวน pod ที่จะถูกลบออกไปเมื่อมีการ update
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+        - name: nginx # app ที่เราจะเปลี่ยน หรือเราจะใส่ Tag version ที่จะ Deploy ทับ
+          image: nginx # app ที่เราจะเปลี่ยน หรือเราจะใส่ Tag version ที่จะ Deploy ทับ
+          resources:
+            requests:
+              memory: "100Mi"
+              cpu: "100m"
+            limits:
+              memory: "200Mi"
+              cpu: "200m"
